@@ -59,8 +59,21 @@ function getSolUnit({ unitOfMeasure }) {
 
 // APP
 document.addEventListener('DOMContentLoaded', () => {
-  printLoadingInConsole()
-  getSols().catch(printErrorInConsole)
+  console.log('Loading...')
+
+  const timerIdToWait = setTimeout(() => {
+    console.log('Please, wait a bit more...')
+  }, 5000)
+  const timerIdToError = setTimeout(() => {
+    console.log('Error occured while fetching data')
+  }, 10000)
+
+  getSols()
+    .catch(printErrorInConsole)
+    .finally(() => {
+      clearTimeout(timerIdToWait)
+      clearTimeout(timerIdToError)
+    })
 })
 
 async function getSols() {
@@ -84,10 +97,6 @@ function printHistoryInConsole(solHistory) {
 
 function printErrorInConsole(e) {
   console.log('--> ERROR:', e)
-}
-
-function printLoadingInConsole() {
-  console.log('Loading...')
 }
 
 async function getSolHistory(solOrder) {
