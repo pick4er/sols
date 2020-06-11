@@ -1,0 +1,22 @@
+{
+  "name": "sols",
+  "version": "1.0.0",
+  "description": "Mars sols history",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pick4er/sols.git"
+  },
+  "author": "pick4er",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pick4er/sols/issues"
+  },
+  "homepage": "https://github.com/pick4er/sols#readme",
+  "dependencies": {
+    "serve-handler": "^6.1.3"
+  }
+}
