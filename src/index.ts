@@ -2,6 +2,12 @@
 // TYPES
 interface Units {
   Celsius: 'C';
+  /*
+    btw and imho, [undefined]: 'C';
+    fallback is redundant, because
+    internal logic is responsible of error handling,
+    not dictionary.
+  */
 }
 
 interface SuccessSol {
@@ -55,26 +61,44 @@ async function getSols() {
     throw new Error(latestSol.errorMessage)
   }
 
-  const solHistory = await getSolHistory(latestSol.sol)
-  solHistory.forEach((sol: SuccessSol) => {
+  for await (
+    let historySol of getSolHistory(latestSol.sol)
+  ) {
+    if (isErrorSol(historySol)) {
+      throw new Error(historySol.errorMessage)
+    }
+
     console.log(
-`Sol #${sol.sol}: \
-${sol.min_temp}..${sol.max_temp} \
-${Units[sol.unitOfMeasure]}`
+`Sol #${historySol.sol}: \
+${historySol.min_temp}..${historySol.max_temp} \
+${Units[historySol.unitOfMeasure]}`
     )
-  })
+  }
 }
 
-async function getSolHistory(solOrder: number) {
+/*
+  actually, generator is optional,
+  but it allows us to split fetching
+  and displaying logic.
+*/
+async function* getSolHistory(solOrder: number) {
   let oldestSol = solOrder - SOL_OFFSET
   if (oldestSol < 0) {
     oldestSol = solOrder
   }
 
-  const solsRequests = []
+  const solsRequests: Promise<SolResponse>[] = []
   for (let i = solOrder; i >= oldestSol; i--) {
     solsRequests.push(fetchSol(i))
   }
 
-  return await Promise.all(solsRequests)
+  const solsResponses = []
+  for (let i = 0; i < solsRequests.length; i++) {
+    const solResponse: SolResponse = await solsRequests[i]
+    solsResponses.push(solResponse)
+
+    yield solResponse
+  }
+
+  return solsResponses
 }

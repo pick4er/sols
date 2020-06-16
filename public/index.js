@@ -35,6 +35,25 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __asyncValues = (this && this.__asyncValues) || function (o) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
+    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
+    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
+};
+var __await = (this && this.__await) || function (v) { return this instanceof __await ? (this.v = v, this) : new __await(v); }
+var __asyncGenerator = (this && this.__asyncGenerator) || function (thisArg, _arguments, generator) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var g = generator.apply(thisArg, _arguments || []), i, q = [];
+    return i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i;
+    function verb(n) { if (g[n]) i[n] = function (v) { return new Promise(function (a, b) { q.push([n, v, a, b]) > 1 || resume(n, v); }); }; }
+    function resume(n, v) { try { step(g[n](v)); } catch (e) { settle(q[0][3], e); } }
+    function step(r) { r.value instanceof __await ? Promise.resolve(r.value.v).then(fulfill, reject) : settle(q[0][2], r); }
+    function fulfill(value) { resume("next", value); }
+    function reject(value) { resume("throw", value); }
+    function settle(f, v) { if (f(v), q.shift(), q.length) resume(q[0][0], q[0][1]); }
+};
 function isErrorSol(sol) {
     return sol.status === 404 || sol.status === 500;
 }
@@ -59,30 +78,62 @@ function fetchSol(solOrder) {
 // APP
 getSols().catch(console.error);
 function getSols() {
+    var e_1, _a;
     return __awaiter(this, void 0, void 0, function () {
-        var latestSol, solHistory;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var latestSol, _b, _c, historySol, e_1_1;
+        return __generator(this, function (_d) {
+            switch (_d.label) {
                 case 0: return [4 /*yield*/, fetchLatestSol()];
                 case 1:
-                    latestSol = _a.sent();
+                    latestSol = _d.sent();
                     if (isErrorSol(latestSol)) {
                         throw new Error(latestSol.errorMessage);
                     }
-                    return [4 /*yield*/, getSolHistory(latestSol.sol)];
+                    _d.label = 2;
                 case 2:
-                    solHistory = _a.sent();
-                    solHistory.forEach(function (sol) {
-                        console.log("Sol #" + sol.sol + ": " + sol.min_temp + ".." + sol.max_temp + " " + Units[sol.unitOfMeasure]);
-                    });
-                    return [2 /*return*/];
+                    _d.trys.push([2, 7, 8, 13]);
+                    _b = __asyncValues(getSolHistory(latestSol.sol));
+                    _d.label = 3;
+                case 3: return [4 /*yield*/, _b.next()];
+                case 4:
+                    if (!(_c = _d.sent(), !_c.done)) return [3 /*break*/, 6];
+                    historySol = _c.value;
+                    if (isErrorSol(historySol)) {
+                        throw new Error(historySol.errorMessage);
+                    }
+                    console.log("Sol #" + historySol.sol + ": " + historySol.min_temp + ".." + historySol.max_temp + " " + Units[historySol.unitOfMeasure]);
+                    _d.label = 5;
+                case 5: return [3 /*break*/, 3];
+                case 6: return [3 /*break*/, 13];
+                case 7:
+                    e_1_1 = _d.sent();
+                    e_1 = { error: e_1_1 };
+                    return [3 /*break*/, 13];
+                case 8:
+                    _d.trys.push([8, , 11, 12]);
+                    if (!(_c && !_c.done && (_a = _b.return))) return [3 /*break*/, 10];
+                    return [4 /*yield*/, _a.call(_b)];
+                case 9:
+                    _d.sent();
+                    _d.label = 10;
+                case 10: return [3 /*break*/, 12];
+                case 11:
+                    if (e_1) throw e_1.error;
+                    return [7 /*endfinally*/];
+                case 12: return [7 /*endfinally*/];
+                case 13: return [2 /*return*/];
             }
         });
     });
 }
+/*
+  actually, generator is optional,
+  but it allows us to split fetching
+  and displaying logic.
+*/
 function getSolHistory(solOrder) {
-    return __awaiter(this, void 0, void 0, function () {
-        var oldestSol, solsRequests, i;
+    return __asyncGenerator(this, arguments, function getSolHistory_1() {
+        var oldestSol, solsRequests, i, solsResponses, i, solResponse;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -94,8 +145,25 @@ function getSolHistory(solOrder) {
                     for (i = solOrder; i >= oldestSol; i--) {
                         solsRequests.push(fetchSol(i));
                     }
-                    return [4 /*yield*/, Promise.all(solsRequests)];
-                case 1: return [2 /*return*/, _a.sent()];
+                    solsResponses = [];
+                    i = 0;
+                    _a.label = 1;
+                case 1:
+                    if (!(i < solsRequests.length)) return [3 /*break*/, 6];
+                    return [4 /*yield*/, __await(solsRequests[i])];
+                case 2:
+                    solResponse = _a.sent();
+                    solsResponses.push(solResponse);
+                    return [4 /*yield*/, __await(solResponse)];
+                case 3: return [4 /*yield*/, _a.sent()];
+                case 4:
+                    _a.sent();
+                    _a.label = 5;
+                case 5:
+                    i++;
+                    return [3 /*break*/, 1];
+                case 6: return [4 /*yield*/, __await(solsResponses)];
+                case 7: return [2 /*return*/, _a.sent()];
             }
         });
     });
