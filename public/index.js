@@ -38,9 +38,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 function isErrorSol(sol) {
     return sol.status === 404 || sol.status === 500;
 }
-function isSuccessSol(sol) {
-    return sol.status === 200;
-}
 // DICTIONARY
 var API_URL = 'https://api.maas2.apollorion.com';
 var SOL_OFFSET = 4;
@@ -76,7 +73,7 @@ function getSols() {
                 case 2:
                     solHistory = _a.sent();
                     solHistory.forEach(function (sol) {
-                        console.log("\n      Sol #" + sol.sol + ":      " + sol.min_temp + ".." + sol.max_temp + "      " + Units[sol.unitOfMeasure] + "\n    ");
+                        console.log("Sol #" + sol.sol + ": " + sol.min_temp + ".." + sol.max_temp + " " + Units[sol.unitOfMeasure]);
                     });
                     return [2 /*return*/];
             }

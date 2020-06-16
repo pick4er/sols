@@ -4,7 +4,9 @@
   "description": "Simple console app that fetches Mars weather history",
   "main": "index.js",
   "scripts": {
-    "tsc": "rm ./public/index.js && tsc"
+    "tsc": "rm ./public/index.js && tsc",
+    "serve": "node ./server/index.js",
+    "start": "npm run tsc && npm run start"
   },
   "repository": {
     "type": "git",

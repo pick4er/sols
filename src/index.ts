@@ -57,11 +57,11 @@ async function getSols() {
 
   const solHistory = await getSolHistory(latestSol.sol)
   solHistory.forEach((sol: SuccessSol) => {
-    console.log(`
-      Sol #${sol.sol}:\
-      ${sol.min_temp}..${sol.max_temp}\
-      ${Units[sol.unitOfMeasure]}
-    `)
+    console.log(
+`Sol #${sol.sol}: \
+${sol.min_temp}..${sol.max_temp} \
+${Units[sol.unitOfMeasure]}`
+    )
   })
 }
 
