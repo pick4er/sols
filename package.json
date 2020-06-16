@@ -6,7 +6,8 @@
   "scripts": {
     "tsc": "rm ./public/index.js && tsc",
     "serve": "node ./server/index.js",
-    "start": "npm run tsc && npm run start"
+    "start": "npm run tsc && npm run start",
+    "heroku-postbuild": "npm run tsc"
   },
   "repository": {
     "type": "git",
